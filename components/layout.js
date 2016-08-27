@@ -9,16 +9,20 @@ export default class Layout extends React.Component {
   	  title:  "Hello, Hello!"
   	};
   }
+
+  changeTitle(title) {
+    this.setState({title});  //same as {title:  title} in ES6
+  }
+
   render() {
-    setTimeout(()=> {
-      this.setState({title: "Yellow, Yellow!"});
-    }, 2500);
-    const title = "Welcome to Glendale!"
+    // setTimeout(()=> {
+    //   this.setState({title: "Yellow, Yellow!"});
+    // }, 2500);
+    // const title = "Welcome to Glendale!"
 
     return ( 
       <div>
-        <Header dare={"whatever"} title={this.state.title} />
-        <Header dare={"from ridgewood with love"} title={"vinegar"}/>
+        <Header changeTitle={this.changeTitle.bind(this)} title={this.state.title} />
         <Footer />
       </div>
     );
