@@ -1,4 +1,4 @@
-#react-js-tutorial = 23 videos?!
-ref:  LearnCode.academy
+#react-js-tutorial = 23 videos
+ref:  LearnCode.academy Youtube tutorial
 
-...although the person doing this video seem to be committing small errors here and there...take note and listen carefully!
+A thorough introduction to React.  You may need to figure out yourself some of the left-out details on how to set up the development environment properly including folder and route structure so you can start immediately; otherwise, you may get stuck and spend some time on this.  For example, I have concocted a config.js file that, although not pefect, works for the purpose at hand.
