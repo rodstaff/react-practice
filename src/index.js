@@ -1,7 +1,18 @@
 import React from 'react';
-import {render} from 'react-dom';
-import Layout from '../components/layout.js';
+import ReactDOM from 'react-dom';
 
-render(<Layout />, document.getElementById('app1'))
+const Layout = React.createClass({
+
+// class Layout extends React.Component {
+  render () {
+  	return (
+      <div>
+        Hello There RrrrrOD!
+      </div>
+  	);
+  }
+});
+
+ReactDOM.render(<Layout />, document.getElementById('app1'))
 
 
