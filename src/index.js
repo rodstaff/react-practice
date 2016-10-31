@@ -1,74 +1,42 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var FriendsContainer = React.createClass({
+var MenuExample = React.createClass({
   getInitialState: function() {
     return {
-      name:  'Rod Taylor',
-      friends:  ['Tom Jones', 'Bill Bradle', 'Jessica Riddley']
+      focused: 0
     };
   },
-  addFriend: function(friend) {
+  clicked: function() {
     this.setState({
-      friends: this.state.friends.concat([friend])
-    });
-  },
-  render:  function () {
-    return (
-      <div>
-        <h3> Name:  {this.state.name} </h3>
-        <AddFriend addNew={this.addFriend} />
-        <ShowList names={this.state.friends} />
-      </div>
-    );
-  }
-});
-
-var AddFriend = React.createClass({
-  getInitialState: function() {
-    return {
-      friend: ''
-    }
-  },
-  updateNewFriend: function(e) {
-    this.setState({
-      newFriend: e.target.value
-    });
-  },
-  handleAddNew:  function() {
-    this.props.addNew(this.state.newFriend);
-    this.setState({
-      newFriend: ''
+      focused: 'index'
     });
   },
   render: function() {
+    var self = this;
     return (
       <div>
-        <input type="text" value={this.state.newFriend} onChange={this.updateNewFriend} />
-        <button onClick={this.handleAddNew}>Add Friend</button>
+        <ul>
+          {this.props.items.map(function(m, index) {
+
+            var style='';
+
+            if(self.state.focused == index) {
+              style = 'focused'
+            }
+            
+            return <li key={index} className={style} onClick={self.clicked.bind(self, index)}>{m}</li>;
+
+          }) }
+        </ul>
+        <p>Selected: {this.props.items[this.state.focused]}</p>
       </div>
     );
-  }
-});
-
-var ShowList = React.createClass({
-  render:  function() {
-    var listItems = this.props.names.map(function(friend){
-      return <li key={friend.id}> {friend} </li>
-    });
-    return (
-      <div>
-        <h3> Friends </h3>
-        <ul>
-          {listItems}
-        </ul>
-      </div>
-    )
   }
 });
 
 ReactDOM.render(
-  <FriendsContainer/>, document.getElementById('app1')
+  <MenuExample items={['Home', 'Services', 'About', 'Contact Us']} />, document.getElementById('app1')
 );
 
 
