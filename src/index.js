@@ -1,18 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const Layout = React.createClass({
-
-// class Layout extends React.Component {
-  render () {
+const HelloUser = React.createClass({
+  getInitialState:  function(){
+  	return {
+  	  username:  '@tylermcginnifff'
+  	}
+  },
+  handleChange: function(e){
+  	this.setState({
+      username: e.target.value
+  	});
+  },
+  render: function(){
   	return (
-      <div>
-        Hello There RrrrrOD!
-      </div>
+  	  <div>
+  	    Hello {this.state.username} <br/>
+  	    Change Name: <input type="text" value={this.state.username} onChange={this.handleChange} />
+  	  </div>
   	);
   }
 });
 
-ReactDOM.render(<Layout />, document.getElementById('app1'))
+ReactDOM.render(<HelloUser />, document.getElementById('app1'))
 
 
