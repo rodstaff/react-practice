@@ -1,29 +1,74 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var Greeting = React.createClass({
-  getInitialState:  function() {
+var FriendsContainer = React.createClass({
+  getInitialState: function() {
     return {
-    greet:  'what is going on'
-    }
+      name:  'Rod Taylor',
+      friends:  ['Tom Jones', 'Bill Bradle', 'Jessica Riddley']
+    };
   },
-  handleChange:  function(e) {
+  addFriend: function(friend) {
     this.setState({
-      greet: e.target.value
+      friends: this.state.friends.concat([friend])
     });
   },
-  render:  function() {
+  render:  function () {
     return (
       <div>
-        <h2>Hey, {this.state.greet} {this.props.name} ?</h2> <br/>
-        Change Greeting: <input type="text" value={this.state.greet} onChange={this.handleChange} />
+        <h3> Name:  {this.state.name} </h3>
+        <AddFriend addNew={this.addFriend} />
+        <ShowList names={this.state.friends} />
       </div>
     );
   }
 });
 
+var AddFriend = React.createClass({
+  getInitialState: function() {
+    return {
+      friend: ''
+    }
+  },
+  updateNewFriend: function(e) {
+    this.setState({
+      newFriend: e.target.value
+    });
+  },
+  handleAddNew:  function() {
+    this.props.addNew(this.state.newFriend);
+    this.setState({
+      newFriend: ''
+    });
+  },
+  render: function() {
+    return (
+      <div>
+        <input type="text" value={this.state.newFriend} onChange={this.updateNewFriend} />
+        <button onClick={this.handleAddNew}>Add Friend</button>
+      </div>
+    );
+  }
+});
+
+var ShowList = React.createClass({
+  render:  function() {
+    var listItems = this.props.names.map(function(friend){
+      return <li key={friend.id}> {friend} </li>
+    });
+    return (
+      <div>
+        <h3> Friends </h3>
+        <ul>
+          {listItems}
+        </ul>
+      </div>
+    )
+  }
+});
+
 ReactDOM.render(
-  <Greeting name="Toney"/>, document.getElementById('app1')
+  <FriendsContainer/>, document.getElementById('app1')
 );
 
 

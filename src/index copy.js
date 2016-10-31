@@ -1,27 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const HelloUser = React.createClass({
-  getInitialState:  function(){
-  	return {
-  	  username:  'Ralph Lauren'
-  	}
+
+
+var Greeting = React.createClass({
+  getInitialState() => {
+    return {
+    greet:  'what is going on'
+    }
   },
-  handleChange: function(e){
-  	this.setState({
-      username: e.target.value
-  	});
+  handleChange (e) => {
+    this.setState({
+      greet: e.target.value
+    });
   },
-  render: function(){
-  	return (
-  	  <div>
-  	    Hello {this.state.username} <br/>
-  	    Change Name: <input type="text" value={this.state.username} onChange={this.handleChange} />
-  	  </div>
-  	);
+  render:  function() {
+    return (
+      <div>
+        <h2>Hey, {this.state.greet} {this.props.name} ?</h2> <br/>
+        Change Greeting: <input type="text" value={this.state.greet} onChange={this.handleChange} />
+      </div>
+    );
   }
 });
 
-ReactDOM.render(<HelloUser />, document.getElementById('app1'))
+var ShowList = React.createClass ({
+  render: function(){
+      var listItems = this.props.names.map(function(friend){
+        return <li> {friend} </li>
+      });
+    return (
+      <div>
+        <h3>  Friends </h3>
+        <ul>
+          {listItems}
+        </ul>
+      </div>
+    );
+  }
+});
+
+ReactDOM.render(<FriendsContainer name="Rod"/>, document.getElementById('app1'))
 
 
