@@ -1,42 +1,78 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-var MenuExample = React.createClass({
+// Real-Time Search
+
+// Example 3
+// Order Form
+//
+
+var ServiceChooser = React.createClass ({
   getInitialState: function() {
     return {
-      focused: 0
+      total: 0
     };
   },
-  clicked: function() {
+  addTotal: function(price) {
     this.setState({
-      focused: 'index'
+      total: this.state.total + price
     });
   },
   render: function() {
-    var self = this;
+    var self = this,
+        services = this.props.items.map(function(s) {
+          return (
+            <Service name={s.name} price={s.price} active={s.active} addTotal={self.addTotal} />
+          );
+        });
     return (
       <div>
-        <ul>
-          {this.props.items.map(function(m, index) {
-
-            var style='';
-
-            if(self.state.focused == index) {
-              style = 'focused'
-            }
-            
-            return <li key={index} className={style} onClick={self.clicked.bind(self, index)}>{m}</li>;
-
-          }) }
-        </ul>
-        <p>Selected: {this.props.items[this.state.focused]}</p>
+        <h1>
+          Our services
+        </h1>
+        <div id="services" key={services.id}>
+          {services}
+          <p id="total">Total<b>${this.state.total.toFixed(2)}</b></p>
+        </div>
       </div>
     );
   }
 });
 
+var Service = React.createClass({
+  getInitialState: function() {
+    return {
+      active: false
+    };
+  },
+  clickHandler:  function() {
+    var active = !this.state.active;
+    this.setState({
+      active: active
+    });
+    this.props.addTotal(
+      active ? this.props.price : -this.props.price
+    );
+  },
+  render: function() {
+    return (
+      <p className={this.state.active ? 'active' : ''} onClick={this.clickHandler}>
+        {this.props.name} <b>{this.props.price.toFixed(2)}</b>
+      </p>
+    );
+  }
+});
+
+var services = [
+  {name: 'Web Development', price: 300},
+  {name: 'Design', price: 400},
+  {name: 'Integration', price: 250},
+  {name: 'Training', price: 220}
+];
+
+
 ReactDOM.render(
-  <MenuExample items={['Home', 'Services', 'About', 'Contact Us']} />, document.getElementById('app1')
+  <ServiceChooser items={services} />, document.getElementById('app1')
 );
 
 
