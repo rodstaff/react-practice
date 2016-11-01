@@ -1,80 +1,64 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// Real-Time Search
-
-// Example 3
-// Order Form
-//
-
-var ServiceChooser = React.createClass ({
+var FilteredList = React.createClass({
   getInitialState: function() {
     return {
-      total: 0
+      initialItems: [
+         "Apples",
+         "Broccoli",
+         "Chicken",
+         "Duck",
+         "Eggs",
+         "Fish",
+         "Granola",
+         "Hash Browns"
+      ],
+      items: []
     };
   },
-  addTotal: function(price) {
+  filterList: function(event) {
+    var updatedList = this.state.initialItems;
+    updatedList = updatedList.filter(function(item) {
+      return (
+        item.toLowerCase().search(
+          event.target.value.toLowerCase()) !== -1
+      );
+    });
     this.setState({
-      total: this.state.total + price
+      items: updatedList
+    });
+  },
+  componentWillMount:  function() {
+    this.setState({
+      items: this.state.initialItems
     });
   },
   render: function() {
-    var self = this,
-        services = this.props.items.map(function(s) {
-          return (
-            <Service name={s.name} price={s.price} active={s.active} addTotal={self.addTotal} />
-          );
-        });
     return (
-      <div>
-        <h1>
-          Our services
-        </h1>
-        <div id="services" key={services.id}>
-          {services}
-          <p id="total">Total<b>${this.state.total.toFixed(2)}</b></p>
-        </div>
+      <div className="filter-list">
+        <input type="text" placeholder="Search" onChange={this.filterList} />
+        <List items={this.state.items} />
       </div>
     );
   }
 });
 
-var Service = React.createClass({
-  getInitialState: function() {
-    return {
-      active: false
-    };
-  },
-  clickHandler:  function() {
-    var active = !this.state.active;
-    this.setState({
-      active: active
-    });
-    this.props.addTotal(
-      active ? this.props.price : -this.props.price
-    );
-  },
+var List = React.createClass({
   render: function() {
     return (
-      <p className={this.state.active ? 'active' : ''} onClick={this.clickHandler}>
-        {this.props.name} <b>{this.props.price.toFixed(2)}</b>
-      </p>
+      <ul>
+        {this.props.items.map(function(item) {
+          return (
+            <li key={item}>{item}</li>
+          );
+        }) }
+      </ul>
     );
   }
 });
 
-var services = [
-  {name: 'Web Development', price: 300},
-  {name: 'Design', price: 400},
-  {name: 'Integration', price: 250},
-  {name: 'Training', price: 220}
-];
-
-
 ReactDOM.render(
-  <ServiceChooser items={services} />, document.getElementById('app1')
+  <FilteredList/>, document.getElementById('app1')
 );
-
-
-
 
