@@ -1,8 +1,89 @@
-mport React from 'react';
+link:  https://tylermcginnis.com/react-js-tutorial-pt-1-a-comprehensive-guide-to-building-apps-with-react-js-8ce321b125ba#.57py9xwib
+
+import React from 'react';
 import ReactDOM from 'react-dom';
 
-// Example 1
+// Example 1-1
 // App that add friends to existing list using input box
+//
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+var FilteredList = React.createClass({
+  getInitialState: function() {
+    return {
+      initialItems: [
+         "Apples",
+         "Beef",
+         "Broccoli",
+         "Cabbage",
+         "Chicken",
+         "Corn Syrup",
+         "Duck",
+         "Eggs",
+         "Fish",
+         "Flour",
+         "Granola",
+         "Hash Browns",
+         "Potatoes",
+         "Red Pepppers",
+         "Soy Sauce",
+         "Spinach",
+         "String Beans",
+         "Tomatoes",
+         "Vinegar",
+         "Watermelon"
+      ],
+      items: []
+    };
+  },
+  filterList: function(ev) {
+    var updatedList = this.state.initialItems.filter(function(item) {
+      return (
+        item.toLowerCase().search(
+          ev.target.value.toLowerCase()) !== -1
+      );
+    });
+    this.setState({
+      items: updatedList
+    });
+  },
+  componentWillMount:  function() {
+    this.setState({
+      items: this.state.initialItems
+    });
+  },
+  render: function() {
+    return (
+      <div className="filter-list">
+        <input type="text" placeholder="Search" onChange={this.filterList} />
+        <List items={this.state.items} />
+      </div>
+    );
+  }
+});
+
+var List = React.createClass({
+  render: function() {
+    return (
+      <ul>
+        {this.props.items.map(function(item) {
+          return (
+            <li key={item}>{item}</li>
+          );
+        }) }
+      </ul>
+    );
+  }
+});
+
+ReactDOM.render(
+  <FilteredList/>, document.getElementById('root')
+);
+
+//Example 1-2
+//This app adds friends instead
 //
 
 var FriendsContainer = React.createClass({
@@ -65,8 +146,8 @@ var ShowList = React.createClass({
     };
   },
   render: function() {
-    var listItems = this.props.names.map(function(friend) {
-      return <li>{friend}</li>
+    var listItems = this.props.names.map(function(frien) {
+      return <li key={frien}>{frien}</li>
     });
     return (
       <div>
@@ -80,7 +161,7 @@ var ShowList = React.createClass({
 });
 
 ReactDOM.render(
-  <FriendsContainer />, document.getElementById('app1')
+  <FriendsContainer />, document.getElementById('root')
 );
 
 // Example 2
@@ -406,7 +487,7 @@ ReactDOM.render(
 );
 
 //
-//Example: A counter app
+//Example 5: A counter app
 //
 
 
@@ -436,5 +517,259 @@ var MyCounter = React.createClass({
     );
   }
 });
+
+//
+// Example 6: Todos List
+//
+import React from 'react'
+import ReactDOM from 'react-dom'
+import _ from 'lodash'
+
+class App extends React.Component {
+  constructor() {
+    super();
+    const todos = [
+      {
+        task:  'exercise a lot',
+        isCompleted:  false
+      },
+      {
+        task: 'eat dinner',
+        isCompleted:  true
+      }
+    ];
+    this.state = {
+      todos
+    };
+  }
+  toggleTask(task) {
+    const foundTodo = _.find(this.state.todos, todo => todo.task === task);
+    foundTodo.isCompleted = !foundTodo.isCompleted;
+    this.setState({ todos: this.state.todos });
+  }
+  createTask(task) {
+    this.state.todos.push({
+      task,
+      isCompleted: false
+    });
+    this.setState({ todos: this.state.todos});
+  }
+  saveTask(oldTask, newTask) {
+    const foundTodo = _.find(this.state.todos, todo => todo.task === oldTask);
+    foundTodo.task = newTask;
+    this.setState({ todos: this.state.todos });
+  }
+  deleteTask(taskToDelete) {
+    _.remove(this.state.todos, todo => todo.task === taskToDelete);
+    this.setState({ todos: this.state.todos });
+  }
+  render () {
+    return (
+      <div>
+        <h1>React ToDos App</h1>
+        <CreateTodo createTask={this.createTask.bind(this)}/>
+        <TodosList 
+          todos={this.state.todos} 
+          toggleTask={this.toggleTask.bind(this)}
+          saveTask={this.saveTask.bind(this)}
+          deleteTask={this.deleteTask.bind(this)}
+        />
+      </div>
+    );
+  }
+}
+  
+class CreateTodo extends React.Component {
+  static propTypes() {
+    createTask = React.PropTypes.func.isRequired
+  }
+  handleCreate(event) {
+    event.preventDefault();
+    this.props.createTask(this.refs.createInput.value);
+    this.refs.createInput.value = '';
+  }
+  render () {
+    return (
+      <form onSubmit={this.handleCreate.bind(this)}>
+        <input type="text" placeholder="Reminder: To Do List" 
+          ref="createInput"/>
+        <button>Create</button>
+      </form>
+    );
+  }
+}
+
+class TodosList extends React.Component {
+  static defaultProps() {
+    todos: []
+  }
+  static propTypes() {
+    toggleTask, saveTask, deleteTask = React.PropTypes.func.isRequired
+  }
+  renderItems() {
+    const props = _.omit(this.props, 'todos');
+    return _.map(this.props.todos, (todo, index) => <TodosListItem key={index} 
+        {...todo} {...props}/>);
+  }
+  render () {
+    return (
+      <table>
+        <TodosListHeader />
+        <tbody>
+          {this.renderItems()}
+        </tbody>
+      </table>
+    );
+  }
+}
+
+class TodosListItem extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      isEditing: false
+    };
+  }
+  onEditClick() {
+    this.setState({ isEditing: true});
+  }
+  onCancelClick() {
+    this.setState({ isEditing: false});
+  }
+  onSaveClick(event) {
+    event.preventDefault();
+
+    const oldTask = this.props.task;
+    const newTask = this.refs.editInput.value;
+    this.props.saveTask(oldTask, newTask);
+    this.setState({ isEditing: false});
+  }
+  renderTaskSection() {
+    const { task, isCompleted } = this.props;
+    const taskStyle = {
+      color: isCompleted ? 'green' : 'red',
+      cursor: 'pointer'
+    };
+
+    if (this.state.isEditing) {
+      return (
+        <td>
+          <form onSubmit={this.onSaveClick.bind(this)}>
+            <input type="text" defaultValue={task} ref="editInput" />
+          </form>
+        </td>
+      );
+    }
+    return (
+      <td style={taskStyle}
+        onClick={this.props.toggleTask.bind(this, task)}
+      >
+        {task}
+      </td>
+    );
+  }
+  renderActionsSection() {
+    if (this.state.isEditing) {
+      return (
+        <td>
+          <button onClick={this.onSaveClick.bind(this)}>Save</button>
+          <button onClick={this.onCancelClick.bind(this)}>Cancel</button>
+        </td>
+      );
+    } 
+    return (
+        <td>
+          <button onClick={this.onEditClick.bind(this)}>Edit</button>
+          <button onClick={this.props.deleteTask.bind(this, this.props.task)}>Delete</button>
+        </td>
+      );
+  }
+  render () {
+    return (
+        <tr>
+            {this.renderTaskSection()}
+            {this.renderActionsSection()}
+        </tr>
+    );
+  }
+}
+
+class TodosListHeader extends React.Component {
+  render () {
+    return (
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
+
+
+//
+// Example7:  Changing a Header title
+//
+class Layout extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      title:  "Tarzan"
+    };
+  }
+  changeTitle(tit) {
+    this.setState({
+      title: tit
+    });
+  }
+  render() {
+    return (
+      <div>
+        <Header changeTitle={this.changeTitle.bind(this)} title={this.state.title}/>
+        <Footer />
+      </div>
+    );
+  }
+}
+
+class Header extends React.Component {
+  static propTypes() {
+    changeTitle = React.PropTypes.func.isRequired,
+    title = React.PropTypes.string.isRequired
+  }
+  static defaultProps() {
+    title = ''
+  }
+  handleChange(e) {
+      var title = e.target.value;
+      this.props.changeTitle(title);
+  }
+  render() {
+    return (
+      <div>
+        <Title title={this.props.title} />
+        <input type="text" value={this.props.title} onChange={this.handleChange.bind(this)}/>
+      </div>
+   );
+  }
+}
+class Title extends React.Component {
+  render() {
+    return (
+      <h1>{this.props.title}</h1>
+
+    );
+  }
+}
+
+const Footer = () => {
+  return (
+    <h4>This is a Footer!</h4>
+  );
+};
+
 
 
