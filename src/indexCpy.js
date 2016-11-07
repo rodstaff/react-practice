@@ -600,12 +600,12 @@ class CreateTodo extends React.Component {
 }
 
 class TodosList extends React.Component {
-  static defaultProps() {
-    todos: []
-  }
-  static propTypes() {
-    toggleTask, saveTask, deleteTask = React.PropTypes.func.isRequired
-  }
+  // static defaultProps() {
+  //   todos: []
+  // }
+  // static propTypes() {
+  //   toggleTask, saveTask, deleteTask = React.PropTypes.func.isRequired
+  // }
   renderItems() {
     const props = _.omit(this.props, 'todos');
     return _.map(this.props.todos, (todo, index) => <TodosListItem key={index} 
@@ -621,6 +621,14 @@ class TodosList extends React.Component {
       </table>
     );
   }
+}
+
+TodosList.propTypes = {
+  toggleTask, saveTask, deleteTask: React.PropTypes.func.isRequired
+}
+
+TodosList.defaultProps = {
+  todos: []
 }
 
 class TodosListItem extends React.Component {
