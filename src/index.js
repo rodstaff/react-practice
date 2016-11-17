@@ -1,67 +1,67 @@
+//Example 1-1 ES6
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-class Layout extends React.Component {
-  constructor() {
-    super();
+class FilteredList extends React.Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      title:  "Tarzan"
-    };
+      initialItems: [
+         "Apples",
+         "Beef",
+         "Broccoli",
+         "Cabbage",
+         "Chicken",
+         "Corn Syrup",
+         "Duck",
+         "Eggs",
+         "Fish",
+         "Flour",
+         "Granola",
+         "Hash Browns",
+         "Potatoes",
+         "Red Pepppers",
+         "Soy Sauce",
+         "Spinach",
+         "String Beans",
+         "Tomatoes",
+         "Vinegar",
+         "Watermelon"  
+      ],    
+      items: []
+    }
   }
-  changeTitle(tit) {
-    this.setState({
-      title: tit
+  filterList (event) {
+    const updatedItems = this.state.initialItems.filter(function(it) {
+      return (
+        it.toLowerCase().search(event.target.value.toLowerCase()) !== -1
+      );
+    });
+  this.setState({
+      items: updatedItems
     });
   }
   render() {
     return (
       <div>
-        <Header changeTitle={this.changeTitle.bind(this)} title={this.state.title}/>
-        <Footer />
+        <input type="text" onChange={this.filterList} placeholder="Search" />
+        <List items={this.state.items} />
       </div>
     );
   }
 }
-
-class Header extends React.Component {
-  handleChange(e) {
-      var title = e.target.value;
-      this.props.changeTitle(title);
-  }
+class List extends React.Component {
   render() {
     return (
-      <div>
-        <Title title={this.props.title} />
-        <input type="text" value={this.props.title} onChange={this.handleChange.bind(this)}/>
-      </div>
-   );
-  }
-}
-
-Header.propTypes = {
-    changeTitle: React.PropTypes.func.isRequired,
-    title: React.PropTypes.string.isRequired
-}
-
-Header.defaultProps = {
-    title: ''
-}
-
-class Title extends React.Component {
-  render() {
-    return (
-      <h1>{this.props.title}</h1>
-
+      <ul>
+        {this.props.items.map((item) => {
+          return (
+            <li key={item}>{item}</li>
+          );
+        }) }
+      </ul>
     );
   }
 }
-
-const Footer = () => {
-  return (
-    <h4>This is a Footer!</h4>
-  );
-};
-
-ReactDOM.render(
-<Layout />, document.getElementById('root')
-);
+List.propTypes = {
+  items: React.PropTypes.array.isRequired
+}
